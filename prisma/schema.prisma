@@ -7,52 +7,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model post {
-  id        Int         @id @default(autoincrement())
-  title     String      @db.VarChar(255)
-  createdAt DateTime    @default(now()) @db.Timestamp(0)
-  content   String?     @db.Text
-  published Boolean     @default(false)
-  authorId  Int
-  tagtopost tagtopost[]
-  author    user        @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Post_authorId_fkey")
-
-  @@index([authorId], map: "authorId")
-}
-
-model user {
-  id      Int      @id @default(autoincrement())
-  name    String?  @db.VarChar(255)
-  email   String   @unique(map: "email") @db.VarChar(255)
-  posts   post[]
-  profile profile?
-}
-
-model profile {
-  id     Int     @id @default(autoincrement())
-  bio    String? @db.Text
-  userId Int     @unique(map: "userId")
-  user   user    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "profile_ibfk_1")
-}
-
-model tagtopost {
-  A    Int
-  B    Int
-  tag  tag  @relation(fields: [A], references: [id], onDelete: Cascade, map: "_TagTopost_A_fkey")
-  post post @relation(fields: [B], references: [id], onDelete: Cascade, map: "_TagTopost_B_fkey")
-
-  @@unique([A, B], map: "_TagTopost_AB_unique")
-  @@index([B], map: "_TagTopost_B_index")
-  @@map("_tagtopost")
-}
-
 model equipment {
-  code                 String       @id @db.VarChar(255)
-  name                 String?      @db.VarChar(255)
-  installationDate     DateTime?    @db.Date
-  location             String?      @db.VarChar(255)
-  currentState         String?      @db.VarChar(255)
-  latestInspectionDate DateTime?    @db.Date
+  code                 String       @id
+  name                 String?
+  installationDate     DateTime?
+  location             String?
+  currentState         String?
+  latestInspectionDate DateTime?
   isDefective          Boolean      @default(false)
   inspection           inspection[]
   repairment           repairment[]
@@ -60,11 +21,11 @@ model equipment {
 
 model inspection {
   id             Int       @id @default(autoincrement())
-  code           String    @db.VarChar(255)
-  inspectionDate DateTime? @db.Date
-  inspectionTime DateTime? @db.Time(0)
-  color          String?   @db.VarChar(255)
-  state          String?   @db.VarChar(255)
+  code           String
+  inspectionDate DateTime?
+  inspectionTime DateTime?
+  color          String?
+  state          String?
   equipment      equipment @relation(fields: [code], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "inspection_ibfk_1")
 
   @@index([code], map: "code")
@@ -72,18 +33,13 @@ model inspection {
 
 model repairment {
   id               Int       @id @default(autoincrement())
-  code             String    @db.VarChar(255)
-  repairmentDate   DateTime? @db.Date
-  repairmentNote   String?   @db.VarChar(255)
-  repairmentPhoto  Bytes?    @db.Blob
-  repairerInCharge String?   @db.VarChar(255)
+  code             String
+  repairmentDate   DateTime?
+  repairmentNote   String?
+  repairmentPhoto  Bytes?
+  repairerInCharge String?
   equipment        equipment @relation(fields: [code], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "repairment_ibfk_1")
 
   @@index([code], map: "code")
 }
 
-model tag {
-  id        Int         @id @default(autoincrement())
-  name      String
-  tagtopost tagtopost[]
-}

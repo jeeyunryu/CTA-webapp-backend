@@ -5,6 +5,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node app.js",
+    "clear": "rimraf node_modules",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,7 +20,8 @@
   },
   "homepage": "https://github.com/jeeyunryu/CTA-webapp-backend#readme",
   "devDependencies": {
-    "prisma": "^5.1.1"
+    "prisma": "^5.1.1",
+    "rimraf": "5.0.1"
   },
   "dependencies": {
     "@prisma/client": "^5.1.1",
