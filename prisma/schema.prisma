@@ -8,38 +8,29 @@ datasource db {
 }
 
 model equipment {
-  code                 String       @id
-  name                 String?
-  installationDate     DateTime?
-  location             String?
-  currentState         String?
-  latestInspectionDate DateTime?
-  isDefective          Boolean      @default(false)
-  inspection           inspection[]
-  repairment           repairment[]
-}
-
-model inspection {
-  id             Int       @id @default(autoincrement())
-  code           String
-  inspectionDate DateTime?
-  inspectionTime DateTime?
-  color          String?
-  state          String?
-  equipment      equipment @relation(fields: [code], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "inspection_ibfk_1")
-
-  @@index([code], map: "code")
+  id                    Int @id @default(autoincrement())
+  code                  String 
+  name                  String
+  installationDate      DateTime
+  location              String
+  currentState          String?
+  latestInspectionDate  DateTime?
+  isDefective           Boolean?
 }
 
 model repairment {
-  id               Int       @id @default(autoincrement())
-  code             String
-  repairmentDate   DateTime?
-  repairmentNote   String?
-  repairmentPhoto  Bytes?
-  repairerInCharge String?
-  equipment        equipment @relation(fields: [code], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "repairment_ibfk_1")
-
-  @@index([code], map: "code")
+  id                Int @id
+  code              String
+  repairmentDate    DateTime
+  repairmentNote    String?
+  repairmentPhoto   Bytes
+  repairerInCharge  String
 }
 
+model inspection {
+  id                  Int @id
+  code                String
+  inspectionDateTime  DateTime
+  color               String
+  state               String
+}

@@ -1,39 +1,21 @@
-const { PrismaClient } = require('@prisma/client')
+import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
 async function main() {
-    // 조회
-    // const allUsers = await prisma.user.findMany()
-    // console.log(allUsers)
 
-    // 추가
-    // await prisma.user.create({
-    //     data: {
-    //         name: 'Alice',
-    //         email: 'alice@prisma.io',
-    //         posts: {
-    //             create: { title: 'Hello World' },
-    //         },
-    //         profile: {
-    //             create: { bio: 'I like turtles' },
-    //         },
-    //     },
-    // })
-
-    // const allUsers = await prisma.user.findMany({
-    //     include: {
-    //         posts: true,
-    //         profile: true,
-    //     },
-    // })
-    // console.dir(allUsers, { depth: null })
-
-    const post = await prisma.post.update({
-        where: { id : 1 },
-        data: { published: true },
-    })
-    console.log(post)
+    const test = await prisma.equipment.create({
+      data: {
+          code: 'A101',
+          name: '프레서',
+          installationDate: '2023-08-09T10:15:30Z',
+          location: 'A동',
+          currentState: '안전',
+          latestInspectionDate: '2023-08-09T10:15:30Z',
+          isDefective: false
+      }
+  })
+    console.log(test)
   }
 
 main()

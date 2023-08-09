@@ -4,7 +4,8 @@ const prisma = new PrismaClient()
 
 export function initRoutes(app) {
 
-    
+
+
     app.get('/equipments', async (req, res) => {
         const equipments = await prisma.equipment.findMany()
         res.json(equipments);
@@ -29,7 +30,7 @@ export function initRoutes(app) {
     app.put('/equipment/:id', async (req, res) => {
         await prisma.equipment.update({
             where: {
-                code: req.params.id
+                id: parseInt(req.params.id)
             },
             data: {
                 code: req.body.code,
@@ -43,7 +44,7 @@ export function initRoutes(app) {
     app.delete('/equipment/:id', async (req, res) => {
         await prisma.equipment.delete({
             where: {
-                code: req.params.id
+                id: parseInt(req.params.id)
             }
         })
     })
