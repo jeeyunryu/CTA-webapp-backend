@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output = "./prisma-client"
 }
 
 datasource db {
@@ -33,4 +34,11 @@ model inspection {
   inspectionDateTime  DateTime
   color               String
   state               String
+}
+
+model user {
+  id        Int @id @default(autoincrement())
+  username  String @unique
+  password  String 
+  isAdmin   Boolean @default(false)
 }

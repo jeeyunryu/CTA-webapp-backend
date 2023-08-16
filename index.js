@@ -8,7 +8,7 @@ async function main() {
       data: {
           code: 'A101',
           name: '프레서',
-          installationDate: '2023-08-09T10:15:30Z',
+          installationDate: '2023-08-09',
           location: 'A동',
           currentState: '안전',
           latestInspectionDate: '2023-08-09T10:15:30Z',

@@ -1,6 +1,9 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from './prisma/prisma-client/index.js'
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient()
+const JWT_SECRET = 'fglkfjkjkdlfjksjfkjdkfjkdsjfkdsjer39934eroer343$#43#$@#$^%^&%^&^$kdjksjfjfjfklj!!#'
 
 export function initRoutes(app) {
 
@@ -12,40 +15,161 @@ export function initRoutes(app) {
     })
 
     app.post('/equipment', async (req, res) => {
-        const equipment = await prisma.equipment.create({
-            data: {
-                code: req.body.code,
-                name: req.body.name,
-                installationDate: req.body.installationDate,
-                location: req.body.location,
-                currentState: req.body.currentState,
-                latestInspectionDate: req.body.latestInspectionDate,
-                isDefective: req.body.isDefective
-            }
-        })
+        
+        const authorization = req.headers.authorization
+        const accessToken = authorization.split('Bearer')[1]
+        
+        if(accessToken) {
+            const equipment = await prisma.equipment.create({
+                data: {
+                    code: req.body.code,
+                    name: req.body.name,
+                    installationDate: req.body.installationDate,
+                    location: req.body.location,
+                    currentState: req.body.currentState,
+                    latestInspectionDate: req.body.latestInspectionDate,
+                    isDefective: req.body.isDefective
+                }
+            })
 
-        res.json(equipment);
+            res.json(equipment);
+        }
+
+        
     })
 
     app.put('/equipment/:id', async (req, res) => {
-        await prisma.equipment.update({
-            where: {
-                id: parseInt(req.params.id)
-            },
-            data: {
-                code: req.body.code,
-                name: req.body.name,
-                installationDate: req.body.installationDate,
-                location: req.body.location
-            }
-        })
+        const authorization = req.headers.authorization
+        const accessToken = authorization.split('Bearer')[1]
+
+        console.log(accessToken)
+        if(accessToken) {
+            const newEquipment = await prisma.equipment.update({
+                where: {
+                    id: parseInt(req.params.id)
+                },
+                data: {
+                    code: req.body.code,
+                    name: req.body.name,
+                    installationDate: req.body.installationDate,
+                    location: req.body.location
+                }
+            })
+
+            res.json(newEquipment);
+        }
     })
 
     app.delete('/equipment/:id', async (req, res) => {
-        await prisma.equipment.delete({
+        const authorization = req.headers.authorization
+        const accessToken = authorization.split('Bearer')[1]
+        if (accessToken) {
+            const deleteEquipment = await prisma.equipment.delete({
+                where: {
+                    id: parseInt(req.params.id)
+                }
+            })
+
+            res.json(deleteEquipment)
+        }
+    })
+
+    app.post('/signUp', async (req, res) => {
+        // console.log(req.body)
+        // console.log(req.params.username)
+        try {
+            const encryptedPassword = await bcrypt.hash(req.body.password, 10);
+
+            const oldUser = await prisma.user.findUnique({
+                where: {
+                    username: req.body.username
+                }
+            })
+            if(oldUser) {
+                return res.json({
+                    error: {
+                        exists: true,
+                    },
+                })
+            }
+            const newUser = await prisma.user.create({
+                data: {
+                    username: req.body.username, 
+                    password: encryptedPassword,
+                }
+                
+            });
+            console.log(newUser)
+            res.send({
+                token: 'token',
+            })
+        } catch (error) {
+            console.error(error)
+            res.send({
+                error: {
+                    reason: error.toString(),
+                },
+            })
+        }
+    })
+
+    app.post('/login', async(req, res) => {
+        const {id, username, isAdmin, password} = req.body
+        const user = await prisma.user.findUnique({
             where: {
-                id: parseInt(req.params.id)
+                username: username
             }
         })
+        if(!user) {
+            return res.json({ 
+                error: {
+                    exists: false
+                }
+            });
+        }
+    
+
+        if(await bcrypt.compare(password, user.password)) {
+            
+            const token = jwt.sign({
+                id,
+                username,
+                isAdmin,
+            }, JWT_SECRET)
+
+            if(res.status(201)) {
+                return res.json({token})
+            } else {
+                return res.json({error: 'error'})
+            }
+        }
+
+        res.json({ state: 'error', error: 'Invalid Password'})
+
+
     })
+
+    app.post('/userData', (req, res) => {
+        const { token } = req.body
+        try {
+            const user = jwt.verify(token, JWT_SECRET)
+            const username = user.username
+            prisma.user.findUnique({
+                where: {
+                    username: username
+                }
+            })
+            .then((data) => {
+                res.send({data})
+            })
+            .catch((error) => {
+                res.send({error})
+            })
+
+        } catch (error) {
+
+        }
+    })
+
+
 }
