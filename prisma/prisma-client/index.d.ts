@@ -3121,9 +3121,9 @@ export namespace Prisma {
   export type InspectionGroupByOutputType = {
     id: number
     code: string
-    inspectionDateTime: Date
-    color: string
-    state: string
+    inspectionDateTime: Date | null
+    color: string | null
+    state: string | null
     _count: InspectionCountAggregateOutputType | null
     _avg: InspectionAvgAggregateOutputType | null
     _sum: InspectionSumAggregateOutputType | null
@@ -3168,9 +3168,9 @@ export namespace Prisma {
     scalars: $Extensions.GetResult<{
       id: number
       code: string
-      inspectionDateTime: Date
-      color: string
-      state: string
+      inspectionDateTime: Date | null
+      color: string | null
+      state: string | null
     }, ExtArgs["result"]["inspection"]>
     composites: {}
   }
@@ -5011,17 +5011,17 @@ export namespace Prisma {
     NOT?: inspectionWhereInput | inspectionWhereInput[]
     id?: IntFilter<"inspection"> | number
     code?: StringFilter<"inspection"> | string
-    inspectionDateTime?: DateTimeFilter<"inspection"> | Date | string
-    color?: StringFilter<"inspection"> | string
-    state?: StringFilter<"inspection"> | string
+    inspectionDateTime?: DateTimeNullableFilter<"inspection"> | Date | string | null
+    color?: StringNullableFilter<"inspection"> | string | null
+    state?: StringNullableFilter<"inspection"> | string | null
   }
 
   export type inspectionOrderByWithRelationInput = {
     id?: SortOrder
     code?: SortOrder
-    inspectionDateTime?: SortOrder
-    color?: SortOrder
-    state?: SortOrder
+    inspectionDateTime?: SortOrderInput | SortOrder
+    color?: SortOrderInput | SortOrder
+    state?: SortOrderInput | SortOrder
   }
 
   export type inspectionWhereUniqueInput = Prisma.AtLeast<{
@@ -5030,17 +5030,17 @@ export namespace Prisma {
     OR?: inspectionWhereInput[]
     NOT?: inspectionWhereInput | inspectionWhereInput[]
     code?: StringFilter<"inspection"> | string
-    inspectionDateTime?: DateTimeFilter<"inspection"> | Date | string
-    color?: StringFilter<"inspection"> | string
-    state?: StringFilter<"inspection"> | string
+    inspectionDateTime?: DateTimeNullableFilter<"inspection"> | Date | string | null
+    color?: StringNullableFilter<"inspection"> | string | null
+    state?: StringNullableFilter<"inspection"> | string | null
   }, "id">
 
   export type inspectionOrderByWithAggregationInput = {
     id?: SortOrder
     code?: SortOrder
-    inspectionDateTime?: SortOrder
-    color?: SortOrder
-    state?: SortOrder
+    inspectionDateTime?: SortOrderInput | SortOrder
+    color?: SortOrderInput | SortOrder
+    state?: SortOrderInput | SortOrder
     _count?: inspectionCountOrderByAggregateInput
     _avg?: inspectionAvgOrderByAggregateInput
     _max?: inspectionMaxOrderByAggregateInput
@@ -5054,9 +5054,9 @@ export namespace Prisma {
     NOT?: inspectionScalarWhereWithAggregatesInput | inspectionScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"inspection"> | number
     code?: StringWithAggregatesFilter<"inspection"> | string
-    inspectionDateTime?: DateTimeWithAggregatesFilter<"inspection"> | Date | string
-    color?: StringWithAggregatesFilter<"inspection"> | string
-    state?: StringWithAggregatesFilter<"inspection"> | string
+    inspectionDateTime?: DateTimeNullableWithAggregatesFilter<"inspection"> | Date | string | null
+    color?: StringNullableWithAggregatesFilter<"inspection"> | string | null
+    state?: StringNullableWithAggregatesFilter<"inspection"> | string | null
   }
 
   export type userWhereInput = {
@@ -5183,7 +5183,6 @@ export namespace Prisma {
   }
 
   export type repairmentCreateInput = {
-    id: number
     code: string
     repairmentDate: Date | string
     repairmentNote?: string | null
@@ -5192,7 +5191,7 @@ export namespace Prisma {
   }
 
   export type repairmentUncheckedCreateInput = {
-    id: number
+    id?: number
     code: string
     repairmentDate: Date | string
     repairmentNote?: string | null
@@ -5201,7 +5200,6 @@ export namespace Prisma {
   }
 
   export type repairmentUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
     code?: StringFieldUpdateOperationsInput | string
     repairmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     repairmentNote?: NullableStringFieldUpdateOperationsInput | string | null
@@ -5219,7 +5217,7 @@ export namespace Prisma {
   }
 
   export type repairmentCreateManyInput = {
-    id: number
+    id?: number
     code: string
     repairmentDate: Date | string
     repairmentNote?: string | null
@@ -5228,7 +5226,6 @@ export namespace Prisma {
   }
 
   export type repairmentUpdateManyMutationInput = {
-    id?: IntFieldUpdateOperationsInput | number
     code?: StringFieldUpdateOperationsInput | string
     repairmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     repairmentNote?: NullableStringFieldUpdateOperationsInput | string | null
@@ -5246,59 +5243,56 @@ export namespace Prisma {
   }
 
   export type inspectionCreateInput = {
-    id: number
     code: string
-    inspectionDateTime: Date | string
-    color: string
-    state: string
+    inspectionDateTime?: Date | string | null
+    color?: string | null
+    state?: string | null
   }
 
   export type inspectionUncheckedCreateInput = {
-    id: number
+    id?: number
     code: string
-    inspectionDateTime: Date | string
-    color: string
-    state: string
+    inspectionDateTime?: Date | string | null
+    color?: string | null
+    state?: string | null
   }
 
   export type inspectionUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
     code?: StringFieldUpdateOperationsInput | string
-    inspectionDateTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    color?: StringFieldUpdateOperationsInput | string
-    state?: StringFieldUpdateOperationsInput | string
+    inspectionDateTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type inspectionUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     code?: StringFieldUpdateOperationsInput | string
-    inspectionDateTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    color?: StringFieldUpdateOperationsInput | string
-    state?: StringFieldUpdateOperationsInput | string
+    inspectionDateTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type inspectionCreateManyInput = {
-    id: number
+    id?: number
     code: string
-    inspectionDateTime: Date | string
-    color: string
-    state: string
+    inspectionDateTime?: Date | string | null
+    color?: string | null
+    state?: string | null
   }
 
   export type inspectionUpdateManyMutationInput = {
-    id?: IntFieldUpdateOperationsInput | number
     code?: StringFieldUpdateOperationsInput | string
-    inspectionDateTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    color?: StringFieldUpdateOperationsInput | string
-    state?: StringFieldUpdateOperationsInput | string
+    inspectionDateTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type inspectionUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     code?: StringFieldUpdateOperationsInput | string
-    inspectionDateTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    color?: StringFieldUpdateOperationsInput | string
-    state?: StringFieldUpdateOperationsInput | string
+    inspectionDateTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type userCreateInput = {

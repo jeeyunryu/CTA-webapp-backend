@@ -17,9 +17,12 @@ export function initRoutes(app) {
     app.post('/equipment', async (req, res) => {
         
         const authorization = req.headers.authorization
-        const accessToken = authorization.split('Bearer')[1]
+        const accessToken = authorization.split('Bearer')[1].replaceAll('\"', '').replaceAll(' ', '')
+
+        const verified = jwt.verify(accessToken, JWT_SECRET)
         
-        if(accessToken) {
+        console.log(verified.isAdmin)
+        if(verified.isAdmin) {
             const equipment = await prisma.equipment.create({
                 data: {
                     code: req.body.code,
@@ -31,19 +34,46 @@ export function initRoutes(app) {
                     isDefective: req.body.isDefective
                 }
             })
+            
 
             res.json(equipment);
+        }
+        else {
+            return res.json({
+                error: {
+                    exists: true,
+                },
+            }) 
         }
 
         
     })
 
+    app.post('/inspection', async (req, res) => {
+        const newInspection = await prisma.inspection.create({
+            data: {
+                code: req.body.code,
+                inspectionDateTime: req.body.inspectionDateTime,
+                color: req.body.color,
+                state: req.body.state
+            }
+        })
+        res.json(newInspection)
+    })
+
+    app.get('/inspections', async (req, res) => {
+        const inspections = await prisma.inspection.findMany()
+        res.json(inspections)
+    })
+
+
     app.put('/equipment/:id', async (req, res) => {
         const authorization = req.headers.authorization
-        const accessToken = authorization.split('Bearer')[1]
+        const accessToken = authorization.split('Bearer')[1].replaceAll('\"', '').replaceAll(' ', '')
+        
 
-        console.log(accessToken)
-        if(accessToken) {
+        const verified = jwt.verify(accessToken, JWT_SECRET)
+        if(verified.isAdmin) {
             const newEquipment = await prisma.equipment.update({
                 where: {
                     id: parseInt(req.params.id)
@@ -62,8 +92,10 @@ export function initRoutes(app) {
 
     app.delete('/equipment/:id', async (req, res) => {
         const authorization = req.headers.authorization
-        const accessToken = authorization.split('Bearer')[1]
-        if (accessToken) {
+        const accessToken = authorization.split('Bearer')[1].replaceAll('\"', '').replaceAll(' ', '')
+
+        const verified = jwt.verify(accessToken, JWT_SECRET)
+        if (verified.isAdmin) {
             const deleteEquipment = await prisma.equipment.delete({
                 where: {
                     id: parseInt(req.params.id)
@@ -115,6 +147,9 @@ export function initRoutes(app) {
 
     app.post('/login', async(req, res) => {
         const {id, username, isAdmin, password} = req.body
+
+        console.log(id)
+        
         const user = await prisma.user.findUnique({
             where: {
                 username: username
@@ -132,9 +167,9 @@ export function initRoutes(app) {
         if(await bcrypt.compare(password, user.password)) {
             
             const token = jwt.sign({
-                id,
+                id: user.id,
                 username,
-                isAdmin,
+                isAdmin: user.isAdmin,
             }, JWT_SECRET)
 
             if(res.status(201)) {

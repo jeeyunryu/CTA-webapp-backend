@@ -20,7 +20,7 @@ model equipment {
 }
 
 model repairment {
-  id                Int @id
+  id                Int @id @default(autoincrement())
   code              String
   repairmentDate    DateTime
   repairmentNote    String?
@@ -29,11 +29,11 @@ model repairment {
 }
 
 model inspection {
-  id                  Int @id
+  id                  Int @id @default(autoincrement())
   code                String
-  inspectionDateTime  DateTime
-  color               String
-  state               String
+  inspectionDateTime  DateTime?
+  color               String?
+  state               String?
 }
 
 model user {
